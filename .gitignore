@@ -56,3 +56,4 @@ x64/
 *.exe
 *.out
 *.app
+/msvc14/s2t4
