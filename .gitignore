@@ -57,3 +57,5 @@ x64/
 *.out
 *.app
 /msvc14/s2t4
+/msvc14/s5vc.1
+/msvc14/s5vc
