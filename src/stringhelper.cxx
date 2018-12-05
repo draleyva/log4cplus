@@ -102,6 +102,15 @@ tostring_internal (std::string & ret, wchar_t const * src, std::size_t size)
 
 
 std::string
+tostring(const std::wstring_view & src)
+{
+    std::string ret;
+    tostring_internal (ret, src.data (), src.size ());
+    return ret;
+}
+
+
+std::string
 tostring(const std::wstring& src)
 {
     std::string ret;
@@ -133,6 +142,15 @@ towstring_internal (std::wstring & ret, char const * src, std::size_t size)
             ? std::char_traits<wchar_t>::to_char_type (src_int)
             : L'?';
     }
+}
+
+
+std::wstring
+towstring(const std::string_view & src)
+{
+    std::wstring ret;
+    towstring_internal (ret, src.data (), src.size ());
+    return ret;
 }
 
 
@@ -204,7 +222,7 @@ toUpper (tchar ch)
 
 
 tstring
-toUpper(const tstring& s)
+toUpper(const tstring_view& s)
 {
     tstring ret;
     std::transform(s.begin(), s.end(), std::back_inserter (ret),
@@ -221,7 +239,7 @@ toLower (tchar ch)
 
 
 tstring
-toLower(const tstring& s)
+toLower(const tstring_view& s)
 {
     tstring ret;
     std::transform(s.begin(), s.end(), std::back_inserter (ret),

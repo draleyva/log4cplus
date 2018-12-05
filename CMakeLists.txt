@@ -12,10 +12,20 @@ endif ()
 set (CMAKE_LEGACY_CYGWIN_WIN32 0)
 
 project (log4cplus)
-cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required (VERSION 3.8)
+
+# Use "-fPIC" / "-fPIE" for all targets by default, including static libs.
+set (CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 enable_language (CXX)
-set (CMAKE_CXX_STANDARD 11)
+if (MSVC)
+  set (CMAKE_CXX_STANDARD 17)
+  if (CMAKE_VS_PLATFORM_NAME MATCHES "ARM")
+    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc")
+  endif ()
+else ()
+  set (CMAKE_CXX_STANDARD 17)
+endif ()
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
 set (CMAKE_CXX_EXTENSIONS ON)
 include(GNUInstallDirs)
@@ -139,7 +149,7 @@ configure_file(${DEFINES_HXX_CMAKE} ${DEFINES_HXX} @ONLY)
 
 include_directories (${log4cplus_SOURCE_DIR}/include
                      ${log4cplus_SOURCE_DIR}/threadpool
-                     ${log4cplus_SOURCE_DIR}/catch/single_include
+                     ${log4cplus_SOURCE_DIR}/catch/single_include/catch2
                      ${log4cplus_BINARY_DIR}/include
                     )
 
@@ -150,6 +160,15 @@ if (LOG4CPLUS_BUILD_TESTING)
 endif (LOG4CPLUS_BUILD_TESTING)
 
 add_subdirectory (src)
+
+# If the CMake version supports it, attach header directory information
+# to the targets for when we are part of a parent build (ie being pulled
+# in via add_subdirectory() rather than being a standalone build).
+if (DEFINED CMAKE_VERSION AND NOT "${CMAKE_VERSION}" VERSION_LESS "2.8.11")
+  target_include_directories(${log4cplus} INTERFACE
+    $<BUILD_INTERFACE:${log4cplus_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${log4cplus_BINARY_DIR}/include>)
+endif()
 
 if (LOG4CPLUS_BUILD_LOGGINGSERVER)
   add_subdirectory (simpleserver)

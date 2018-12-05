@@ -75,6 +75,16 @@ with [log4cplus] 2.x, yet:
   - AIX 5.3 with IBM XL C/C++ for AIX
 
 
+Installation instruction
+========================
+
+Generic Autotools installation instructions are in `INSTALL` file.  The
+following are [log4cplus] specific instructions.
+
+[log4cplus] uses Git sub-modules. Always use `--recurse-submodules` option when
+doing `git clone`.
+
+
 Configure script options
 ========================
 
@@ -269,7 +279,10 @@ To overcome this limitation,
 
 Defining the `log4cplus::Initializer` instance as the first thing in `main()`
 ensures that [log4cplus] is initialized. More importantly, it ensures that
-[log4cplus] shuts down before the execution leaves the `main()` function.
+[log4cplus] shuts down before the execution leaves the `main()`
+function. [log4cplus] will try to automatically initialize at process startup
+and/or on DLL load, and will not tear down until all `log4cplus:Initializer`
+instances are destroyed.
 
 
 Windows and rolling file Appenders
